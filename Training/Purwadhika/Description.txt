@@ -1,1 +1,1 @@
-Collection of SQL query training
+Collection of SQL query training using MySQL 
