@@ -1,5 +1,11 @@
 # MySQL
-# Relational Database Management System (RDBMS) yang digunakan untuk mengolah data terstruktur
+# SQL (Structured Query Language)
+# Digunakan untuk mengakses dan mengelola data di dalam database.
+
+# Database -> Tempat menyimpan, mengelola, dan mengambil data
+# Relational Database Management System (RDBMS)
+# -Jenis database yang datanya disimpan dan dikelola dalam bentuk tabel yang bisa saling berhubungan 
+# -RDBMS digunakan untuk mengolah data terstruktur
 
 # - Tidak Case Sensitive
 # - Indentasi tidak berpengaruh
@@ -61,7 +67,22 @@ CREATE TABLE IF NOT EXISTS products (
     quantity INT UNSIGNED NOT NULL DEFAULT 0,
     price DECIMAL(7,2) NOT NULL DEFAULT 99999.99,
     PRIMARY KEY (productID));
-    
+
+#=========================================================================================
+# Primary key vs Foreign key
+# Primary key --> Kolom disebuah tabel yang nilainya harus unik/tidak boleh ada duplikat
+# Tujuan: untuk mengidentifikasi setiap baris secara unik di tabel tersebut.
+
+# Foreign key --> Kolom yang menunjuk/mengacu pada primary key ditabel lain
+# Tujuan: untuk menghubungkan antar tabel dan menjaga relasi antar data
+
+#=========================================================================================
+# Tipe data
+# Numerik (INT, BIGINT, Decimal(p,s), float)
+# String (VARCHAR(n): panjang bervariasi, CHAR(n): panjang tetap, TEXT (teks sangat panjang))
+# Tanggal dan waktu (DATE (format: YYYY-MM-DD), DATETIME (tanggal dan waktu (YYYY-MM-DD HH:MM:SS), TIMESTAMP (pencatatan waktu otomatis)
+# Boolean (0 = FALSE, 1 = TRUE)
+
 DESC products;
 
 # Memasukkan data ke dalam tabel
