@@ -1,1 +1,1 @@
-**Collection of SQL Query for SQL training**
+**Collection of SQL Queries for SQL teaching and training**
