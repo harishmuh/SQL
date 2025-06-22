@@ -95,7 +95,7 @@ ORDER BY Population;		# by default ascending
 # Mengurutkan negara berdasarkan jumlah penduduk dari terbesar hingga terkecil
 SELECT 
 	Name, 
-    FORMAT(Population,0) 
+	FORMAT(Population,0) 
 FROM country
 ORDER BY Population DESC;
 
@@ -189,8 +189,8 @@ LIMIT 3 OFFSET 3;
 
 SELECT 
 	CountryCode, 
-    FORMAT(AVG(Population),0) AS Rerata_Populasi, 
-    COUNT(Name) AS Jumlah_Kota
+	FORMAT(AVG(Population),0) AS Rerata_Populasi, 
+	COUNT(Name) AS Jumlah_Kota
 FROM city
 GROUP BY CountryCode
 HAVING Jumlah_Kota > 75
@@ -199,12 +199,12 @@ ORDER BY Rerata_Populasi DESC;
 # Cara penulisan lain
 SELECT 
 	CountryCode, 
-    FORMAT(AVG(Population),0) AS Rerata_Populasi, 
-    COUNT(Name) AS Jumlah_Kota
+    	FORMAT(AVG(Population),0) AS Rerata_Populasi, 
+    	COUNT(Name) AS Jumlah_Kota
 FROM city
 GROUP BY CountryCode
 HAVING Jumlah_Kota > 75
-ORDER BY 2 DESC;		# diurutkan berdasarkan kolom ke 2 (Rerata_Populasi)
+ORDER BY 2 DESC; # diurutkan berdasarkan kolom ke 2 (Rerata_Populasi)
 
 #-----------------------------------------------------------------------------------
 # BUILT IN FUNCTION
@@ -347,9 +347,9 @@ SELECT rating FROM film;
 
 SELECT
 	title,
-    rating,
-    CASE rating
-		WHEN 'PG' THEN 'Parental Guidance Suggested'
+    	rating,
+CASE rating
+	WHEN 'PG' THEN 'Parental Guidance Suggested'
         WHEN 'PG-13' THEN 'Parental Guidance Cautioned'
         WHEN 'G' THEN 'General Audience'
         WHEN 'R' THEN 'Restricted'
@@ -362,8 +362,8 @@ FROM film;
 SELECT 
 	title, 
 	length,
-    CASE
-		WHEN length>0 AND length<=60 THEN 'Short'
+CASE
+	WHEN length>0 AND length<=60 THEN 'Short'
         WHEN length>60 AND length<=120 THEN 'Medium'
         ELSE 'Long'
 	END AS duration_category
@@ -382,9 +382,9 @@ SELECT DISTINCT(rental_rate) FROM film;
 
 SELECT
 	title,
-    rental_rate,
-    CASE rental_rate
-		WHEN 0.99 THEN 'Economy'
+	rental_rate,
+CASE rental_rate
+	WHEN 0.99 THEN 'Economy'
         WHEN 2.99 THEN 'Mass'
         ELSE 'Premium'
 	END AS rental_rate_description
@@ -394,21 +394,22 @@ ORDER BY rental_rate_description;
 # SOAL: Tampilkan banyaknya film pada masing-masing rental_rate_description
 # dalam bentuk tabel
 
-# | Economy | Mass 	| Premium 	|
-# | 341		| 323	| 336		|
+# | Economy 	| Mass	 	| Premium 	|
+# | 341		| 323		| 336		|
 
 SELECT
 	SUM(CASE rental_rate WHEN 0.99 THEN 1 ELSE 0 END) AS Total_Economy,
-    SUM(CASE rental_rate WHEN 2.99 THEN 1 ELSE 0 END) AS Total_Mass,
+    	SUM(CASE rental_rate WHEN 2.99 THEN 1 ELSE 0 END) AS Total_Mass,
 	SUM(CASE rental_rate WHEN 4.99 THEN 1 ELSE 0 END) AS Total_Premium
 FROM
 	film;
 
+-- cara penulisan lain
 SELECT
-    SUM(CASE WHEN rental_rate=0.99 THEN 1 ELSE 0 END) AS Total_Economy,
-    SUM(CASE WHEN rental_rate=2.99 THEN 1 ELSE 0 END) AS Total_Mass,
-    SUM(CASE WHEN rental_rate=4.99 THEN 1 ELSE 0 END) AS Total_Premium
-FROm film;
+    	SUM(CASE WHEN rental_rate=0.99 THEN 1 ELSE 0 END) AS Total_Economy,
+    	SUM(CASE WHEN rental_rate=2.99 THEN 1 ELSE 0 END) AS Total_Mass,
+    	SUM(CASE WHEN rental_rate=4.99 THEN 1 ELSE 0 END) AS Total_Premium
+FROM film;
 
 
 
