@@ -131,7 +131,9 @@ WHERE Continent='Asia';
 SELECT FORMAT(SUM(Population),0) FROM country
 WHERE Continent='Europe';
 
+#--------------------------------------------------------------------------------------
 # GROUP BY
+# Mengelompokkan data berdasarkan nilai kolom tertentu, digunakan dengan fungsi agregat (SUM(), AVG(), COUNT(), dll).
 
 # Digunakan untuk mengelompokkan data berdasarkan baris tertentu
 # Misal menghitung total populasi di tiap benua
