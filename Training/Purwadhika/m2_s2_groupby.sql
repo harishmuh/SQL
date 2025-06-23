@@ -1,12 +1,15 @@
 #===============================================================================================================================================
 # STRING PATTERN
 
+# Digunakan untuk memfilter teks (string) dalam klausa WHERE.
 # LIKE digunakan untuk menyaring/memfilter baris yang berisi kolom dengan tipe data teks
 # LIKE digunakan setelah WHERE
 
+# % → menggantikan 0 atau lebih karakter.
 # % --> untuk menunjukkan diawali/diikuti dengan berapapun jumlah karakter (0 atau lebih)
 # contoh: 'bl%' akan menyaring 'blue', 'black', 'blob', etc
 
+# _ → menggantikan tepat 1 karakter.
 # _ --> untuk menunjukkan diawali atau diikuti dengan satu karakter
 # contoh: 'h_t' akan menyaring 'hat', 'hit', 'hut', 'hot', etc
 
@@ -62,8 +65,11 @@ AND Name NOT LIKE '%x';
 #----------------------------------------------------------------------------------------
 # RANGE (mencari rentang nilai)
 # BETWEEN
+# Memeriksa apakah nilai berada dalam rentang tertentu (inklusif).
 # digunakan untuk membatasi rentang nilai tertentu
 
+# NOT BETWEEN
+# Memeriksa apakah nilai di luar rentang.
 # SOAL: Tampilkan 5 negara yang populasinya
 # lebih besar atau sama dengan 400000 dan kurang dari atau sama dengan 1000000
 
@@ -84,7 +90,8 @@ LIMIT 5;
 #---------------------------------------------------------------------------------------
 # SORTING
 
-# ORDER BY -> digunakan untuk mengurutkan data baik secara ASCENDING maupun DESCENDING
+# ORDER BY -> Mengurutkan hasil query berdasarkan kolom tertentu.
+# digunakan untuk mengurutkan data baik secara ASCENDING maupun DESCENDING
 # ASCENDING: angka diurutkan dari terkecil ke terbesar, huruf dari A - Z
 # DESCENDING: angka diurutkan dari terbesar ke terkecil, huruf dari Z - A 
 
