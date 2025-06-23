@@ -136,11 +136,31 @@ WHERE Continent='Europe';
 # Mengelompokkan data berdasarkan nilai kolom tertentu, digunakan dengan fungsi agregat (SUM(), AVG(), COUNT(), dll).
 
 # Digunakan untuk mengelompokkan data berdasarkan baris tertentu
-# Misal menghitung total populasi di tiap benua
-# GROUP BY berpasangan dengan aggreagat function
+
+# GROUP BY berpasangan dengan aggregat function
 # AGG Function : SUM, AVG, MIN, MAX, COUNT, dll
+
+
+# Misal menghitung total negara di tiap benua
+SELECT Continent, COUNT(*) AS Country_Count
+FROM country
+GROUP BY Continent;
+
+# Having vs where
 # Untuk filtering setelah GROUP BY, tidak bisa menggunakan klausa WHERE
 # tetapi menggunakan HAVING
+
+# WHERE --> Memfilter sebelum GROUP BY
+-- WHERE sebelum pengelompokan
+SELECT * FROM country WHERE Continent = 'Asia';
+
+# HAVING --> Memfilter setelah GROUP BY
+-- HAVING setelah pengelompokan
+SELECT Continent, COUNT(*) FROM country
+GROUP BY Continent
+HAVING COUNT(*) > 30;
+
+	
 
 # Urutan QUERY
 
@@ -165,6 +185,7 @@ SELECT Continent, COUNT(Name) FROM country
 GROUP BY Continent
 ORDER BY COUNT(Name) DESC;
 
+# Exercise
 # Tampilkan banyaknya negara di masing masing benua
 # selain benua antarctica dan oceania
 # dan diurutkan dari jumlah negara terbanyak ke tersedikit
@@ -217,11 +238,11 @@ ORDER BY 2 DESC; # diurutkan berdasarkan kolom ke 2 (Rerata_Populasi)
 
 #-----------------------------------------------------------------------------------
 # BUILT IN FUNCTION
-# AGGREGATE FUNCTION: berlaku untuk kumpulan/kelompok atau seluruh data dalam sebuah kolom
+# AGGREGATE FUNCTION (untuk grup data): berlaku untuk kumpulan/kelompok atau seluruh data dalam sebuah kolom
 # Contoh : SUM, AVG, COUNT, MIN, MAX
 
-# SCALAR FUNCTION: berlaku pada tiap baris dari suatu kolom
-# LENGTH, UCASE, LCASE
+# SCALAR FUNCTION (baris per baris): berlaku pada tiap baris dari suatu kolom
+# LENGTH(), UCASE() atau UPPER(), LCASE(), LOWER(), ROUND(), CONCAT()
 
 # Mengetahui panjang karakter (LENGTH)
 SELECT Name, LENGTH(Name) AS Panjang_Karakter FROM country;
@@ -249,6 +270,16 @@ SELECT CURTIME();
 USE sakila;
 SHOW TABLES;
 SELECT * FROM payment;
+
+-- Fungsi	Keterangan
+-- NOW()	Waktu dan tanggal saat ini
+-- CURDATE()	Tanggal hari ini saja
+-- CURTIME()	Waktu saat ini saja
+-- YEAR(date)	Mengambil tahun
+-- MONTHNAME()	Nama bulan
+-- DAYNAME()	Nama hari
+-- DATE_ADD()	Menambahkan tanggal
+-- DATEDIFF()	Selisih hari antar 2 tanggal
 
 # YEAR(): menampilkan tahun dari suatu kolom
 SELECT payment_date, YEAR(payment_date) FROM payment;
