@@ -57,7 +57,7 @@ FROM salaries
 WHERE salary > (SELECT AVG(salary) FROM salaries);
 
 #--------------------------------------------------
-# Sub Query bisa berupa list
+# Sub Query bisa berupa kolom
 
 # SOAL : Tampilkan salary untuk karyawan yang nama depannya diawali oleh huruf 'N'
 
@@ -94,7 +94,7 @@ SELECT
 FROM salaries;
 
 #-----------------------------------------------------------------------------
-# SUB QUERY bisa diletakkan setelah FORM
+# SUB QUERY bisa diletakkan setelah FROM
 
 # Tampilkan tabel yang berisi biodata pegawai wanita
 # berisi first_name, last_name, birth_date, gender
