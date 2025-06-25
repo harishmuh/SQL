@@ -16,7 +16,9 @@ FROM country
 WHERE Population >  25434098.1172
 ORDER BY Population;
 
-# Subquery
+#==============================================================================================================
+# Subquery (scalar atau nilai tunggal)
+# Subquery yang hanya menghasilkan satu nilai
 SELECT Name, Population
 FROM country
 WHERE Population > (SELECT AVG(Population) FROM Country)
@@ -24,7 +26,8 @@ ORDER BY Population;
 
 #==============================================================================================================
 # SUBQUERY
-# Sub Query adalah query yang berada di dalam query yang lebih besar
+# Sub Query (atau inner query) adalah query yang berada di dalam query lain.
+# Biasanya digunakan untuk menghitung nilai atau memfilter data berdasarkan hasil dari query lain.
 
 # Contoh sederhana
 # SELECT nama_kolom1, nama_kolom2, ...
@@ -57,8 +60,10 @@ FROM salaries
 WHERE salary > (SELECT AVG(salary) FROM salaries);
 
 #--------------------------------------------------
-# Sub Query bisa berupa kolom
+# Sub Query bisa berupa list kolom (di WHERE/IN clause)
+# Digunakan ketika hasil subquery adalah daftar nilai
 
+	
 # SOAL : Tampilkan salary untuk karyawan yang nama depannya diawali oleh huruf 'N'
 
 # Cara Mas Iki (IMPLICIT JOIN)
@@ -70,10 +75,10 @@ AND e.first_name LIKE 'N%';
 
 # 1. Mencari daftar emp_no untuk karyawan yang namanya di awali huruf N
 SELECT emp_no FROM employees
-WHERE first_name LIKE 'N%';   # berupa list
+WHERE first_name LIKE 'N%';   # berupa list/daftar
  
 # 2. Tampilkan salary untuk karyawan yang nama depannya diawali oleh huruf 'N'
-
+# Cara subquery
 SELECT emp_no, salary FROM salaries
 WHERE emp_no IN 
 	(SELECT emp_no FROM employees
@@ -81,6 +86,7 @@ WHERE emp_no IN
 
 #----------------------------------------------------------------------------
 # SUB QUERY bisa diletakkan setelah SELECT
+# Bisa digunakan untuk menampilkan nilai agregat di tiap baris hasil
 
 # SOAL : Buat sebuah tabel yang menampilkan 
 # emp_no, salary, avg_salary, min_salary, dan max_salary dari tabel salaries
@@ -95,7 +101,8 @@ FROM salaries;
 
 #-----------------------------------------------------------------------------
 # SUB QUERY bisa diletakkan setelah FROM
-
+# Subquery menjadi tabel sementara
+	
 # Tampilkan tabel yang berisi biodata pegawai wanita
 # berisi first_name, last_name, birth_date, gender
 
@@ -142,7 +149,10 @@ WHERE emp_no IN
     
 #===============================================================================
 # RELATIONSHIP MODEL CONSTRAINS
+# Tujuan: Menghubungkan antar tabel dalam database relasional.
 # Referencing --> menghubungkan antara beberapa tabel pada RDBMS
+
+# -- Jenis constraints
 # PRIMARY KEY --> identitas unik yang dimiliki oleh sebuah tabel
 # - tidak memiliki duplikat
 # - tidak boleh NULL
@@ -175,7 +185,8 @@ WHERE emp_no IN
 
 #-----------------------------------------------------------------------------------------------
 # JOIN TABLE
-# JOIN digunakan untuk mengkombinasikan data dari dua tabel atau lebih
+# JOIN digunakan untuk mengkombinasikan data dari dua tabel atau lebih berdasarkan kolom yang saling terkait 
+# (biasanya Foreign Key dan Primary Key).
 # digabungkan berdasarakan kolom tertentu yang dimiliki oleh kedua tabel (ON)
 
 # Langkahnya
@@ -189,7 +200,8 @@ WHERE emp_no IN
 # INNER JOIN/JOIN
 # Digunakan untuk menggabungkan 2 tabel atau lebih
 # dan menampilkan data yang dimiliki oleh kedua tabel
-
+# -Hanya menampilkan baris yang memiliki kecocokan di kedua tabel.
+	
 # Syntax:
 # SELECT tabel_kiri.nama_kolom1, tabel_kanan.nama_kolom2
 # FROM tabel_kiri
@@ -237,7 +249,9 @@ SELECT e.emp_no, e.first_name, e.last_name, t.title FROM employees e
 JOIN titles t ON e.emp_no = t.emp_no
 WHERE title='Senior Engineer';
 
+#----------------------------------------------------------
 # JOIN lebih dari 1 tabel
+# -Bisa digunakan untuk menggabungkan banyak tabel sekaligus.
 
 # SOAL: Tampilkan nama karyawan beserta departemennya saat ini
 SELECT * FROM employees;
@@ -260,11 +274,12 @@ JOIN departments d ON cde.dept_no = d.dept_no;
 SELECT * FROM dept_emp;
 
 #----------------------------------------------------------
-# IMPLICIT JOIN
+# IMPLICIT JOIN (Old style join)
 # Menggabungkan 2 tabel atau lebih tanpa perlu menuliskan klausa JOIN
 # IMPLICIT JOIN-nya dilakukan pada klausa WHERE
 # FROM-nya mengandung 2 tabel atau lebih
 # Tetapi perhitungan lebih lambat
+# Kekurangannya: lebih sulit dibaca, dan rentan error saat tabel semakin banyak.
 
 SELECT *
 FROM employees e, salaries s
@@ -316,11 +331,12 @@ SELECT * FROM profesi;
 
 #------------------------------------------------------------------------------------------------
 # LEFT JOIN
+# - Menampilkan semua data dari tabel kiri dan data dari tabel kanan yang cocok (NULL jika tidak cocok).
 # Saat melakukan join, ada tabel yang disebut pertama setelah FROM
 # dan tabel kedua yang disebut setelah LEFT JOIN
 # Dengan melakukan LEFT JOIN, maka data yang ditampilkan mengikuti tabel LEFT
 # Jadi jika ada data yang dimiliki oleh tabel LEFT tetapi tidak dimiliki tabel RIGHT
-# maka datanta akan tetap ditampilkan
+# maka datanya akan tetap ditampilkan
 
 # menampilkan nama dan profesi
 
@@ -336,6 +352,7 @@ ON n.ID = p.ID;
 
 #------------------------------------------------------------------------------------------------
 # RIGHT JOIN
+# - Menampilkan semua data dari tabel kanan dan yang cocok dari kiri (NULL jika tidak cocok).
 # Kebalikannya dari left join
 # Nama akan NULL jika suatu profesi tidak ada pelakunya
 
@@ -346,6 +363,7 @@ ON n.ID = p.ID;
 
 #------------------------------------------------------------------------------------------------
 # FULL OUTER JOIN
+# - Menampilkan semua data dari kedua tabel. Jika tidak cocok, ditampilkan sebagai NULL.
 # Menampilkan seluruh data pada kedua tabel
 # Profesi akan NULL jika seseorang tidak memiliki profesi
 # Nama akan NULL jika suatu profesi tidak ada pelakunya
@@ -363,7 +381,7 @@ ON n.ID = p.ID;
 #------------------------------------------------------------
 # SELF JOIN
 # Sama dengan IMPLICIT JOIN, kita tidak menulis secara eksplisit klausa joinnya
-# Ciri utamnya, tabel digabungkan dengan tabel dirinya sendiri
+# Ciri utamnya, Menggabungkan tabel dengan dirinya sendiri. Biasanya digunakan saat mencari relasi dalam satu tabel.
 # Pada format query ini, biasanya diberikan alias yang berbeda untuk tabel yang sama
 
 # Contoh: Kita ingin menampilkan first_name, last_name, dan birth_date
