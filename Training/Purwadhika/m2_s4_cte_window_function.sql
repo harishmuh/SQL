@@ -8,14 +8,28 @@ WHERE length > (SELECT AVG(length) FROM film);
 #-----------------------------------------------------------------------------
 # COMMON TABLE EXPRESSION (CTE)
 
-# CTE adalah sebuah query berupa subquery yang ditulis terpisah
-# dan akan dipergunakan kembali
+# CTE adalah sebuah hasil query atau subquery yang ditulis terpisah atau terdapat dalam statement query lain
+# dan dapat direferensikan/digunakan lagi berulang kali
 # CTE ini ditulis sebelum SELECT .... FROM ....
 # serta diberi nama/alias
 
 # Syntax
 # WITH nama_cte AS (... isi subquery-nya...)
-# SELECT .... FROM ....
+# SELECT ... FROM ...
+
+-- WITH nama_tabel_baru AS (
+-- 	SELECT 
+-- 		nama_kolom,
+-- 		kolom_numeric
+-- 	FROM nama_tabel
+-- )
+-- SELECT 
+-- 	nama_kolom, 
+-- 	agregasi_kolom_numeric
+-- FROM nama_tabel_baru
+-- GROUP BY nama_kolom
+-- HAVING kondisi_agregasi
+	
 
 # SOAL : Tampilkan film yang durasinya lebih panjang dari rata-rata durasi keselurahan film
 # 1. Mencari rata-rata durasi terlebih dahulu
@@ -82,6 +96,7 @@ GROUP BY 1, 3;
 # tetap mempertahankan jumlah baris
 # Semua ROWS akan tetap pada barisnya tanpa mengalami pengurangan atau penambahan
 
+-- Mirip seperti agregasi, hanya saja tidak mengurangi jumlah baris
 #---------------------------------------------
 # 1. OVER PARTITION
 # OVER clause merupakan pengganti group by yang dipasangkan pada row
