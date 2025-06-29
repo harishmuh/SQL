@@ -89,6 +89,13 @@ GROUP BY 1, 3;
 #======================================================================================================
 # WINDOW FUNCTION
 
+-- Window function adalah fungsi SQL yang digunakan untuk melakukan perhitungan agregat, rangking, atau analisi baris pada sebuah 'Jendela' data,
+-- tanpa mengelompokkan hasil seperti GROUP BY.
+
+-- Perbedaan Window function dengan GROUP BY
+-- a. GROUP BY menggabungkan baris menjadi satu hasil per group
+-- b. Window funtion tidak menggabungkan baris, tetapi mengembalikan nilai agregat per baris sambil tetap menampilkan semua baris.
+	
 # Sebuah clausa dalam SQL yang berfungsi untuk melakukan agregasi tangpa menggunakan GROUP BY
 # Apabila kita menggunakan GROUP BY, maka terdapat key column yang valuenya merupakan distinct values
 # GROUP BY menyebabkan berkurangnya jumlah baris sesuai dengan banyaknya nilai unik
@@ -96,9 +103,16 @@ GROUP BY 1, 3;
 # tetap mempertahankan jumlah baris
 # Semua ROWS akan tetap pada barisnya tanpa mengalami pengurangan atau penambahan
 
--- Mirip seperti agregasi, hanya saja tidak mengurangi jumlah baris
+-- Singkatnya: Mirip seperti agregasi, hanya saja tidak mengurangi jumlah baris
+
+-- Struktur dasar windows function 
+-- * Function_name: Fungsi seperti ROW_NUMBER, SUM, AVG, RANK, dll
+-- * PARTITION BY: (Opsional) mengelompokkan data, membagi data ke dalam group seperti GROUP BY, tapi tidak menyatukan baris 
+-- * ORDER BY: (opsional) mengatur urutan data dalam tiap partisi (untuk fungsi rangking)
+
 #---------------------------------------------
 # 1. OVER PARTITION
+# Menandakan kita sedang menggunakan window function.
 # OVER clause merupakan pengganti group by yang dipasangkan pada row
 # tanpa mengurangi jumlah baris
 
@@ -125,7 +139,7 @@ SELECT f.rating, al.rerata_by_rating
 FROM film f, avg_length_by_rating al
 WHERE f.rating= al.rating;
 
-# Cara 2 - OVER
+# Cara 2 - Window function - OVER partition 
 SELECT 
 	rating, 
 	length,
@@ -150,9 +164,12 @@ FROM
 	film;
 
 #-------------------------------------------------------------
-# 2. ROW_NUMBER()
+# 2. ROW_NUMBER() - nomor baris
 # Fungsi ROW_NUMBER() untuk membuat kolom baru yang berisikan nomor baris dari 
-# 1 hingga ke-n sesuai dengan jumlah baris
+# 1 hingga ke-n sesuai dengan jumlah baris.
+-- Memberikan nomor urut unik untuk setiap baris dalam kelompok (partition). 
+-- Tidak peduli apakah nilainya sama atau tidak.
+	
 # Fungsinya seperti indexing tetapi index-nya disimpan dalam suatu kolom baru
 # Fungsinya sekilas tidak begitu terlihat, namun pada penggunaan yang lebih advanced 
 # Kita akan membutuhkan untuk filter di beberapa kelompok data
@@ -205,10 +222,24 @@ WHERE nomor_baris < 6;
 # 3. RANK() dan DENSE RANK()
 # ROW_NUMBER() hanya menghitung baris dalam angka dari 1 hingga ke-n (jumlah baris)
 # dari urutan terkecil hingga terbesar
+	
 # RANK() menghitung urutan berdasarkan value yang kita ukur
 # dan bisa dari terkecil ke terbesar atau sebaliknya dari terbesar ke terkecil
+-- Memberikan peringkat dengan loncatan (gap) jika ada nilai yang sama.
+-- Ciri khas: Jika dua nilai sama, mereka dapat peringkat sama, peringkat berikutnya akan diloncati.
 
-# Memberikan peringkat berdasarkan durasi film dari yang terendah ke tertinggi
+-- DENSE_RANK()
+-- Mirip seperti RANK(), tapi tanpa loncatan pada nilai yang sama.
+-- Ciri khas: Nilai sama → peringkat sama, peringkat berikutnya langsung lanjut (tanpa skip)	
+
+-- Kapan menggunakan apa?
+-- Fungsi	| Gunakan Saat…
+-- ROW_NUMBER() | Perlu nomor urut unik (misal: ambil transaksi terbaru per pelanggan)
+-- RANK()	| Perlu ranking dengan nilai ganda dan tidak masalah dengan gap/lompatan
+-- DENSE_RANK()	| Perlu ranking dengan nilai ganda, tanpa gap/lompatan
+	
+	
+# Berikan peringkat berdasarkan durasi film dari yang terendah ke tertinggi
 SELECT 
 	title, 
 	length,
@@ -237,7 +268,11 @@ WHERE ranking=1;
 
 #-------------------------------------------------------------------------------------
 # NTILE()
-
+-- fungsi SQL untuk membagi data menjadi n kelompok yang kira-kira sama besar berdasarkan urutan tertentu.
+-- syntax: NTILE(n) OVER (ORDER BY kolom)
+-- Bisa digunakan untuk membagi kuartil (4 kelompok)
+-- Bisa digunakan untuk membagi data menjadi grup yang seimbang jumlah barisnya.
+	
 # Mengelompokkan data dari terkecil hingga terbesar
 # Jumlah kelompok akan disesuaikan dengan persentase pembagian yang kita masukkan
 # NTILE(4) --> artinya data akan dibagi ke dalam 4 kelompok
@@ -278,11 +313,13 @@ FROM film;
 
 #-------------------------------------------------------------------------------
 # 5. SLIDING WINDOW
-
+-- sliding window mengacu pada bagaimana baris-baris dalam sebuah "jendela" (window) dipilih dinamis untuk setiap baris, 
+-- berdasarkan urutan atau kondisi tertentu.
+	
 # Untuk menghitung angka agregat yang bersifat bergerak atau kumulatif
 # Bisa digunakan untuk menghitung Moving Average, Cumulative Sum, dll
 # Syntax
-# OVER(ROWS BETWEEN <a> AND <b>)
+# OVER(ROWS BETWEEN <a/start> AND <b/end>)
 # Posisi titik <a> dan <b> bisa diisi:
 # 1. CURRENT ROW: baris/row yang aktif
 # 2. n PRECEDING: row sebelum sebanyak n baris
@@ -294,13 +331,13 @@ FROM film;
 
 SELECT 
 	amount,
-    SUM(amount) OVER(ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_sum
+    	SUM(amount) OVER(ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_sum
 FROM payment;
 
 # Menghitung moving average dari 2 baris terakhir
 SELECT
 	amount,
-    AVG(amount) OVER(ROWS BETWEEN 1 PRECEDING AND CURRENT ROW) AS moving_average_2
+    	AVG(amount) OVER(ROWS BETWEEN 1 PRECEDING AND CURRENT ROW) AS moving_average_2
 FROM payment;
 
 # SOAL: Hitung cumulative sum dari jumlah film berdasarkan rating
@@ -312,7 +349,7 @@ FROM payment;
 SELECT 
 	rating, 
 	COUNT(title) AS jumlah_film,
-    SUM(COUNT(title)) OVER(ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_sum
+    	SUM(COUNT(title)) OVER(ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_sum
 FROM film
 GROUP BY rating;
 
