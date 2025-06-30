@@ -7,10 +7,15 @@ WHERE length > (SELECT AVG(length) FROM film);
 
 #-----------------------------------------------------------------------------
 # COMMON TABLE EXPRESSION (CTE)
-
+-- CTE --> Fitur di SQL yang memungkinkan kita membuat temporary result set (tabel sementara) yang dapat kita rujuk dalam query utama
+-- Manfaat CTE:
+-- - Membuat query lebih terbaca dan terstruktur
+-- - CTE dapat digunakan berulangkali sehingga Menghindari sub query berulang
+	
 # CTE adalah sebuah hasil query atau subquery yang ditulis terpisah atau terdapat dalam statement query lain
 # dan dapat direferensikan/digunakan lagi berulang kali
-# CTE ini ditulis sebelum SELECT .... FROM ....
+	
+# CTE ini ditulis sebelum query SELECT .... FROM ....
 # serta diberi nama/alias
 
 # Syntax
@@ -38,7 +43,8 @@ SELECT AVG(length) FROM film;
 # 2. Menampilkan jawaban dari soal dengan menggunakan CTE
 WITH avg_length AS 
 	(SELECT AVG(length) FROM film)
-SELECT title, length FROM film
+SELECT title, length 
+FROM film
 WHERE length > (SELECT * FROM avg_length);
 
 # Cara penulisan lain
