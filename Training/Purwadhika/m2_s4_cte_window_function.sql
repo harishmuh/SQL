@@ -1,3 +1,6 @@
+# Common Table Expression (CTE) and Window Function concept
+
+
 # SOAL : Tampilkan film yang durasinya lebih panjang dari rata-rata durasi keselurahan film
 
 # Subquery
@@ -9,8 +12,10 @@ WHERE length > (SELECT AVG(length) FROM film);
 # COMMON TABLE EXPRESSION (CTE)
 -- CTE --> Fitur di SQL yang memungkinkan kita membuat temporary result set (tabel sementara) yang dapat kita rujuk dalam query utama
 -- Manfaat CTE:
--- - Membuat query lebih terbaca dan terstruktur
--- - CTE dapat digunakan berulangkali sehingga Menghindari sub query berulang
+-- - Membuat query lebih terbaca dan terstruktur (rapi)
+-- - CTE dapat digunakan berulangkali (pada syntax yang sama) sehingga Menghindari sub query berulang
+
+-- Kekurangan CTE: running nya bisa lebih lambat dibandingkan metode lain
 	
 # CTE adalah sebuah hasil query atau subquery yang ditulis terpisah atau terdapat dalam statement query lain
 # dan dapat direferensikan/digunakan lagi berulang kali
@@ -34,8 +39,32 @@ WHERE length > (SELECT AVG(length) FROM film);
 -- FROM nama_tabel_baru
 -- GROUP BY nama_kolom
 -- HAVING kondisi_agregasi
-	
 
+# Database: employees
+
+-- Tampilkan karyawan yang lahir pada tahun 1960, dan tampilkan emp_no, first_name, birth_date.
+
+-- Akses database
+USE employees;
+	
+-- sub query
+SELECT emp_no, first_name, birth_date
+FROM (
+    SELECT emp_no, first_name, birth_date
+    FROM employees
+    WHERE YEAR(birth_date) = 1960
+) AS sub;
+
+-- CTE
+WITH lahir_1960 AS (
+    SELECT emp_no, first_name, birth_date
+    FROM employees
+    WHERE YEAR(birth_date) = 1960
+)
+SELECT *
+FROM lahir_1960;
+	
+# Database: sakila
 # SOAL : Tampilkan film yang durasinya lebih panjang dari rata-rata durasi keselurahan film
 # 1. Mencari rata-rata durasi terlebih dahulu
 SELECT AVG(length) FROM film;
@@ -47,20 +76,23 @@ SELECT title, length
 FROM film
 WHERE length > (SELECT * FROM avg_length);
 
-# Cara penulisan lain
+# Cara menghitung rata-rata durasi film # Dengan implicit join
 WITH avg_length AS 
 	(SELECT AVG(length) AS rerata_durasi FROM film)
 SELECT title, length, rerata_durasi 
 FROM film f, avg_length al
 WHERE f.length > al.rerata_durasi;
 
-# Kelebihan CTE
-# - Cara penulisannya lebih rapi
-# - Dapat dipergunakan kembali pada syntax yang sama
+-- CTE untuk menghitung rata-rata durasi film dengan (explisit) join
+WITH avg_length AS (
+    SELECT AVG(length) AS rerata_durasi
+    FROM film
+)
+SELECT f.title, f.length, al.rerata_durasi
+FROM film f
+JOIN avg_length al ON f.length > al.rerata_durasi;
 
-# Kekurangan CTE
-# - Runningnya lebih lambat dibandingkan metode lain
-
+# Database: world
 # SOAL: Tampilkan benua dengan jumlah negara yang lebih besar
 # dibandingkan jumlah negara di benua North America menggunakan CTE
 USE world;
@@ -84,9 +116,9 @@ FROM country
 GROUP BY continent
 HAVING jumlah > (SELECT * FROM jumlah_negara_NA);
 
-# Cara CTE + IMPLICIT JOIN
+# Cara CTE + IMPLICIT JOIN + Menampilkan jumlah country count di North America
 WITH jumlah_negara_NA AS 
-	(SELECT COUNT(Name) AS Jumlah
+	(SELECT COUNT(Name) AS country_count_NA
 	FROM country
 	WHERE continent = 'North America')
 SELECT continent, COUNT(name), Jumlah FROM country, jumlah_negara_NA
@@ -118,7 +150,10 @@ GROUP BY 1, 3;
 
 #---------------------------------------------
 # 1. OVER PARTITION
-# Menandakan kita sedang menggunakan window function.
+-- OVER(PARTITION BY ...) adalah bagian dari Window Function di SQL yang digunakan untuk mengelompokkan data (seperti GROUP BY) 
+-- sebelum fungsi jendela dijalankan, namun tanpa menggabungkan barisnya (tidak mengurangi baris).
+-- intinya: PARTITION BY = “kelompokkan dulu data berdasarkan kolom ini, lalu hitung windows function untuk setiap kelompok.”
+# Sekaligus Menandakan kita sedang menggunakan window function.
 # OVER clause merupakan pengganti group by yang dipasangkan pada row
 # tanpa mengurangi jumlah baris
 
