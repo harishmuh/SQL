@@ -367,7 +367,12 @@ FROM film;
 # 3. n FOLLOWING: row sesudah sebanyak n baris
 # 4. UNBOUNDED PRECEDING: baris pertama
 # 5. UNBOUNDED FOLLOWING: baris terakhir
+# ROWS BETWEEN 2 PRECEDING AND CURRENT ROW --> Ambil 3 baris terakhir termasuk baris ini (Cocok untuk moving average)
+# ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW --> Ambil dari baris pertama hingga sekarang (Cumulative Sum)
+# ROWS BETWEEN CURRENT ROW AND 2 FOLLOWING --> Baris ini dan dua baris setelahnya
 
+	
+	
 # Menghitung cumulative sum dari baris awal hingga baris tertentu
 
 SELECT 
@@ -375,7 +380,12 @@ SELECT
     	SUM(amount) OVER(ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_sum
 FROM payment;
 
-# Menghitung moving average dari 2 baris terakhir
+# ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW: running total dari awal hingga baris ini
+
+# Menghitung moving average dari 
+-- UNBOUNDED PRECEDING = mulai dari baris paling awal
+-- CURRENT ROW = sampai baris saat ini
+	
 SELECT
 	amount,
     	AVG(amount) OVER(ROWS BETWEEN 1 PRECEDING AND CURRENT ROW) AS moving_average_2
@@ -385,7 +395,7 @@ FROM payment;
 # Kelompokkan jumlah film pada tiap-tiap rating
 # Kemudian tambahkan satu kolom berupa cumulative sum dari jumlah film
 
-# Cara Mba Maya
+# Cara tanpa CTE
 
 SELECT 
 	rating, 
